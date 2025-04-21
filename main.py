@@ -14,7 +14,6 @@ import json
 import requests
 import re
 from dotenv import load_dotenv
-from apscheduler.schedulers.background import BackgroundScheduler
 from datetime import datetime
 from contextlib import asynccontextmanager
 
@@ -22,9 +21,6 @@ from contextlib import asynccontextmanager
 load_dotenv()
 
 models.Base.metadata.create_all(bind=engine)
-
-# Инициализация планировщика
-scheduler = BackgroundScheduler()
 
 # Функция для очистки базы данных чатов
 
@@ -49,19 +45,13 @@ def clear_chats_database():
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     # Код, выполняемый при запуске приложения
-    scheduler.add_job(clear_chats_database, 'cron', hour=0, minute=0)
-    scheduler.start()
-    print("Планировщик задач запущен")
-
     yield  # Здесь приложение работает
 
     # Код, выполняемый при завершении приложения
-    scheduler.shutdown()
-    print("Планировщик задач остановлен")
 
 # Создаем приложение с контекстным менеджером lifespan
-app = FastAPI(title="Небезопасный магазин с ужасной архитектурой",
-              lifespan=lifespan)
+app = FastAPI(title="Небезопасный магазин с ужасной архитектурой")
+
 
 app.add_middleware(
     CORSMiddleware,
