@@ -3259,6 +3259,29 @@ def clear_chats(db: Session = Depends(get_db)):
             status_code=500, detail=f"Ошибка при очистке базы данных: {error_message}")
 
 
+@app.delete("/api/users/last")
+def delete_last_user(db: Session = Depends(get_db)):
+    try:
+        # Получаем последнего пользователя
+        last_user = db.query(models.User).order_by(
+            models.User.id.desc()).first()
+
+        if not last_user:
+            return {"status": "error", "message": "Нет пользователей для удаления"}
+
+        # Удаляем последнего пользователя
+        db.delete(last_user)
+        db.commit()
+        print(f"Последний пользователь с ID {last_user.id} удален")
+        return {"status": "success", "message": f"Пользователь с ID {last_user.id} удален"}
+    except Exception as e:
+        db.rollback()
+        error_message = str(e)
+        print(f"Ошибка при удалении последнего пользователя: {error_message}")
+        raise HTTPException(
+            status_code=500, detail=f"Ошибка при удалении пользователя: {error_message}")
+
+
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run("main:app", host="0.0.0.0", port=8000, reload=True)
