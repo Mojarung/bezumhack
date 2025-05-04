@@ -3183,7 +3183,7 @@ async def send_chat_message(product_id: int, request: Request, db: Session = Dep
         api_url = "https://llm.chutes.ai/v1/chat/completions"
         headers = {
             "Content-Type": "application/json",
-            "Authorization": f"Bearer {os.getenv('CHUTES_API_KEY')}",
+            "Authorization": f"Bearer cpk_b9f646794b554414935934ec5a3513de.f78245306f06593ea49ef7bce2228c8e.kHJVJjyK8dtqB0oD2Ofv4AaME6MSnKDy",
             "HTTP-Referer": "https://bezumhack.ru",
             "User-Agent": "BezumHack/1.0"
         }
